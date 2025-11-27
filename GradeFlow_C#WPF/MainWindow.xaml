@@ -1,0 +1,386 @@
+﻿<Window x:Class="GradeFlow_C_WPF.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:GradeFlow_C_WPF"
+        xmlns:vm="clr-namespace:GradeFlow_C_WPF.ViewModels"
+        mc:Ignorable="d"
+        Title="GradeFlow" Height="800" Width="1200"
+        WindowStartupLocation="CenterScreen"
+        FontFamily="Segoe UI"
+        TextOptions.TextFormattingMode="Display"
+        TextOptions.TextRenderingMode="ClearType"
+        UseLayoutRounding="True"
+        SnapsToDevicePixels="True">
+
+    <Window.Resources>
+        <!-- Colors -->
+        <SolidColorBrush x:Key="SidebarBg" Color="#2E2B5F"/>
+        <SolidColorBrush x:Key="ContentBg" Color="#F5F7FA"/>
+        <SolidColorBrush x:Key="PrimaryPurple" Color="#5C55E5"/>
+        <SolidColorBrush x:Key="TextDark" Color="#1F2937"/>
+        <SolidColorBrush x:Key="TextGreen" Color="#10B981"/>
+        <SolidColorBrush x:Key="TextBlue" Color="#3B82F6"/>
+
+        <!-- Sidebar Button Style -->
+        <Style x:Key="NavButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#A0AEC0"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Padding" Value="20,10"/>
+            <Setter Property="HorizontalContentAlignment" Value="Left"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Foreground" Value="White"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Card Style -->
+        <Style x:Key="CardStyle" TargetType="Border">
+            <Setter Property="Background" Value="White"/>
+            <Setter Property="CornerRadius" Value="8"/>
+            <Setter Property="Padding" Value="20"/>
+            <Setter Property="Effect">
+                <Setter.Value>
+                    <DropShadowEffect Color="#E5E7EB" BlurRadius="10" ShadowDepth="2" Direction="270" Opacity="0.5"/>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Standard Button Styles -->
+        <Style x:Key="StandardButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource PrimaryPurple}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="Padding" Value="15,8"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="4" Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Opacity" Value="0.9"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Success Button Style (Green) -->
+        <Style x:Key="SuccessButtonStyle" TargetType="Button" BasedOn="{StaticResource StandardButtonStyle}">
+            <Setter Property="Background" Value="{StaticResource TextGreen}"/>
+        </Style>
+
+        <!-- Danger Button Style (Red Text) -->
+        <Style x:Key="DangerButtonStyle" TargetType="Button" BasedOn="{StaticResource StandardButtonStyle}">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#EF4444"/>
+        </Style>
+
+        <!-- Secondary Button Style (Grey) -->
+        <Style x:Key="SecondaryButtonStyle" TargetType="Button" BasedOn="{StaticResource StandardButtonStyle}">
+            <Setter Property="Background" Value="#E5E7EB"/>
+            <Setter Property="Foreground" Value="#4B5563"/>
+        </Style>
+
+    </Window.Resources>
+
+    <Grid Background="{StaticResource ContentBg}">
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="250"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- Sidebar -->
+        <Border Grid.Column="0" Background="{StaticResource SidebarBg}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="Auto"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Orientation="Horizontal" Margin="25,30,0,40">
+                    <TextBlock Text="🎓" FontSize="24" Foreground="White" VerticalAlignment="Center" Margin="0,0,10,0"/>
+                    <TextBlock Text="GradeFlow" FontSize="20" FontWeight="Bold" Foreground="White" VerticalAlignment="Center"/>
+                </StackPanel>
+
+                <StackPanel Grid.Row="1">
+                    <Button Command="{Binding NavigateToDashboardCommand}" Style="{StaticResource NavButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="🔢" Margin="0,0,10,0"/>
+                            <TextBlock Text="GPA Calculator"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Command="{Binding NavigateToGradesCommand}" Style="{StaticResource NavButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="📝" Margin="0,0,10,0"/>
+                            <TextBlock Text="Course Grades"/>
+                        </StackPanel>
+                    </Button>
+                    <Button Style="{StaticResource NavButtonStyle}">
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="📊" Margin="0,0,10,0"/>
+                            <TextBlock Text="Trends &amp; Analytics"/>
+                        </StackPanel>
+                    </Button>
+                </StackPanel>
+
+                <StackPanel Grid.Row="2" Margin="25">
+                    <TextBlock Text="Native App Prototype v1.6" Foreground="#6B7280" FontSize="11"/>
+                    <TextBlock Text="Offline Mode: Active" Foreground="#6B7280" FontSize="11" Margin="0,2,0,0"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- Main Content Swapping Logic -->
+        <ContentControl Grid.Column="1" Content="{Binding}">
+            <ContentControl.Style>
+                <Style TargetType="ContentControl">
+                    <Style.Triggers>
+
+                        <!-- View 0: GPA Scenario Planner -->
+                        <DataTrigger Binding="{Binding CurrentViewIndex}" Value="0">
+                            <Setter Property="ContentTemplate">
+                                <Setter.Value>
+                                    <DataTemplate>
+                                        <ScrollViewer VerticalScrollBarVisibility="Auto">
+                                            <StackPanel Margin="40">
+
+                                                <!-- HEADER -->
+                                                <Grid Margin="0,0,0,30">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="*"/>
+                                                        <ColumnDefinition Width="Auto"/>
+                                                    </Grid.ColumnDefinitions>
+                                                    <StackPanel>
+                                                        <TextBlock Text="GPA Scenario Planner" FontSize="24" FontWeight="Bold" Foreground="{StaticResource TextDark}"/>
+                                                        <TextBlock Text="Input your current stats and plan future semesters." FontSize="14" Foreground="#6B7280" Margin="0,5,0,0"/>
+                                                    </StackPanel>
+                                                    <Button Grid.Column="1" Content="💾 Save All Data" Command="{Binding SaveDataCommand}" Style="{StaticResource StandardButtonStyle}" VerticalAlignment="Top"/>
+                                                </Grid>
+
+                                                <!-- INPUTS & RESULT -->
+                                                <Grid Margin="0,0,0,30">
+                                                    <Grid.ColumnDefinitions>
+                                                        <ColumnDefinition Width="2*"/>
+                                                        <ColumnDefinition Width="1.5*"/>
+                                                    </Grid.ColumnDefinitions>
+
+                                                    <Border Grid.Column="0" Style="{StaticResource CardStyle}" Margin="0,0,20,0">
+                                                        <StackPanel>
+                                                            <TextBlock Text="Current Status" FontWeight="Bold" Foreground="{StaticResource TextDark}" Margin="0,0,0,15"/>
+                                                            <Grid Margin="0,0,0,15">
+                                                                <Grid.ColumnDefinitions>
+                                                                    <ColumnDefinition Width="*"/>
+                                                                    <ColumnDefinition Width="*"/>
+                                                                </Grid.ColumnDefinitions>
+                                                                <StackPanel Grid.Column="0" Margin="0,0,10,0">
+                                                                    <TextBlock Text="Current CGPA" FontSize="12" Foreground="#6B7280" Margin="0,0,0,5"/>
+                                                                    <TextBox Text="{Binding CurrentCGPAInput, UpdateSourceTrigger=PropertyChanged}" Padding="10" BorderBrush="#E5E7EB" BorderThickness="1"/>
+                                                                </StackPanel>
+                                                                <StackPanel Grid.Column="1" Margin="10,0,0,0">
+                                                                    <TextBlock Text="Credits Earned" FontSize="12" Foreground="#6B7280" Margin="0,0,0,5"/>
+                                                                    <TextBox Text="{Binding CurrentCreditsInput, UpdateSourceTrigger=PropertyChanged}" Padding="10" BorderBrush="#E5E7EB" BorderThickness="1"/>
+                                                                </StackPanel>
+                                                            </Grid>
+                                                            <Button Content="Update Calculation" Command="{Binding RecalculateProjectedCGPACommand}" Style="{StaticResource SecondaryButtonStyle}" HorizontalAlignment="Left"/>
+                                                        </StackPanel>
+                                                    </Border>
+
+                                                    <Border Grid.Column="1" Style="{StaticResource CardStyle}" Background="#F0F9FF" BorderBrush="{StaticResource TextBlue}" BorderThickness="0">
+                                                        <StackPanel VerticalAlignment="Center">
+                                                            <TextBlock Text="Projected CGPA" FontSize="14" Foreground="#6B7280" HorizontalAlignment="Center"/>
+                                                            <TextBlock Text="{Binding ProjectedCGPA}" FontSize="48" FontWeight="Bold" Foreground="{StaticResource TextBlue}" HorizontalAlignment="Center" Margin="0,5,0,0"/>
+                                                            <TextBlock Text="{Binding ProjectedTotalCredits, StringFormat='Total Credits: {0}'}" FontSize="14" Foreground="#6B7280" HorizontalAlignment="Center" Margin="0,10,0,0"/>
+                                                        </StackPanel>
+                                                    </Border>
+                                                </Grid>
+
+                                                <!-- SEMESTERS -->
+                                                <ItemsControl ItemsSource="{Binding AcademicPeriods}">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Border Style="{StaticResource CardStyle}" Margin="0,0,0,25">
+                                                                <StackPanel>
+                                                                    <Grid Margin="0,0,0,15">
+                                                                        <Grid.ColumnDefinitions>
+                                                                            <ColumnDefinition Width="*"/>
+                                                                            <ColumnDefinition Width="Auto"/>
+                                                                        </Grid.ColumnDefinitions>
+                                                                        <TextBox Text="{Binding PeriodName}" FontSize="18" FontWeight="Bold" BorderThickness="0,0,0,1" BorderBrush="#E5E7EB" Background="Transparent" Width="250" HorizontalAlignment="Left"/>
+                                                                        <StackPanel Grid.Column="1" Orientation="Horizontal" VerticalAlignment="Center">
+                                                                            <TextBlock Text="SGPA: " FontWeight="Bold" Foreground="#6B7280" VerticalAlignment="Center"/>
+                                                                            <TextBlock Text="{Binding Sgpa}" FontWeight="Bold" Foreground="{StaticResource PrimaryPurple}" FontSize="16" VerticalAlignment="Center" Margin="0,0,20,0"/>
+                                                                            <Button Content="Remove Semester" Command="{Binding DataContext.RemoveAcademicPeriodCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" Style="{StaticResource DangerButtonStyle}"/>
+                                                                        </StackPanel>
+                                                                    </Grid>
+
+                                                                    <DataGrid ItemsSource="{Binding Courses}" AutoGenerateColumns="False" CanUserAddRows="False" HeadersVisibility="Column" GridLinesVisibility="Horizontal" Background="Transparent" BorderThickness="0" Margin="0,0,0,15" HorizontalGridLinesBrush="#E5E7EB">
+                                                                        <DataGrid.Columns>
+                                                                            <DataGridTextColumn Header="Course" Binding="{Binding Name}" Width="*"/>
+                                                                            <DataGridTextColumn Header="Credits" Binding="{Binding Credits}" Width="100"/>
+                                                                            <DataGridTextColumn Header="Grade" Binding="{Binding GradeLetter}" Width="150"/>
+                                                                            <DataGridTemplateColumn Width="60">
+                                                                                <DataGridTemplateColumn.CellTemplate>
+                                                                                    <DataTemplate>
+                                                                                        <Button Content="x" Command="{Binding DataContext.DeleteCourseCommand, RelativeSource={RelativeSource AncestorType=DataGrid}}" CommandParameter="{Binding}" Style="{StaticResource DangerButtonStyle}"/>
+                                                                                    </DataTemplate>
+                                                                                </DataGridTemplateColumn.CellTemplate>
+                                                                            </DataGridTemplateColumn>
+                                                                        </DataGrid.Columns>
+                                                                    </DataGrid>
+
+                                                                    <Grid Background="#F9FAFB" Margin="-20,0,-20,-20" Height="60">
+                                                                        <Grid.ColumnDefinitions>
+                                                                            <ColumnDefinition Width="2*"/>
+                                                                            <ColumnDefinition Width="1*"/>
+                                                                            <ColumnDefinition Width="1*"/>
+                                                                            <ColumnDefinition Width="Auto"/>
+                                                                        </Grid.ColumnDefinitions>
+                                                                        <TextBox Grid.Column="0" Text="{Binding NewCourseName, UpdateSourceTrigger=PropertyChanged}" ToolTip="Course Name" Margin="20,10,10,10" Padding="5" VerticalContentAlignment="Center" BorderBrush="#E5E7EB"/>
+                                                                        <TextBox Grid.Column="1" Text="{Binding NewCourseCredits, UpdateSourceTrigger=PropertyChanged}" ToolTip="Credits" Margin="0,10,10,10" Padding="5" VerticalContentAlignment="Center" BorderBrush="#E5E7EB"/>
+                                                                        <ComboBox Grid.Column="2" ItemsSource="{Binding GradeOptions}" SelectedItem="{Binding NewCourseGrade}" Margin="0,10,10,10" VerticalContentAlignment="Center" BorderBrush="#E5E7EB"/>
+                                                                        <Button Grid.Column="3" Command="{Binding AddCourseCommand}" Content="Add Course" Style="{StaticResource StandardButtonStyle}" Margin="0,10,20,10"/>
+                                                                    </Grid>
+                                                                </StackPanel>
+                                                            </Border>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+
+                                                <Button Content="+ Add Academic Period" Command="{Binding AddAcademicPeriodCommand}" Background="Transparent" BorderBrush="#E5E7EB" BorderThickness="2" Foreground="#6B7280" Padding="0,15" Margin="0,10,0,50" FontSize="16" FontWeight="SemiBold">
+                                                    <Button.Resources>
+                                                        <Style TargetType="Border">
+                                                            <Setter Property="CornerRadius" Value="8"/>
+                                                        </Style>
+                                                    </Button.Resources>
+                                                </Button>
+                                            </StackPanel>
+                                        </ScrollViewer>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+
+                        <!-- View 1: Course Grades -->
+                        <DataTrigger Binding="{Binding CurrentViewIndex}" Value="1">
+                            <Setter Property="ContentTemplate">
+                                <Setter.Value>
+                                    <DataTemplate>
+                                        <Grid Margin="40">
+                                            <Grid.RowDefinitions>
+                                                <RowDefinition Height="Auto"/>
+                                                <RowDefinition Height="*"/>
+                                                <RowDefinition Height="Auto"/>
+                                            </Grid.RowDefinitions>
+
+                                            <Grid Grid.Row="0" Margin="0,0,0,20">
+                                                <Grid.ColumnDefinitions>
+                                                    <ColumnDefinition Width="*"/>
+                                                    <ColumnDefinition Width="Auto"/>
+                                                </Grid.ColumnDefinitions>
+                                                <StackPanel>
+                                                    <TextBlock Text="Course Grades" FontSize="24" FontWeight="Bold" Foreground="{StaticResource TextDark}"/>
+                                                    <TextBlock Text="Calculate your potential final grades." FontSize="14" Foreground="#6B7280" Margin="0,5,0,0"/>
+                                                </StackPanel>
+                                                <Button Grid.Column="1" Content="💾 Save All Data" Command="{Binding SaveDataCommand}" Style="{StaticResource StandardButtonStyle}" VerticalAlignment="Top"/>
+                                            </Grid>
+
+                                            <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto">
+                                                <ItemsControl ItemsSource="{Binding GradeCalculators}">
+                                                    <ItemsControl.ItemTemplate>
+                                                        <DataTemplate>
+                                                            <Border Style="{StaticResource CardStyle}" Margin="0,0,0,20">
+                                                                <StackPanel>
+                                                                    <!-- Header: Course Name & Credits -->
+                                                                    <Grid Margin="0,0,0,15">
+                                                                        <Grid.ColumnDefinitions>
+                                                                            <ColumnDefinition Width="*"/>
+                                                                            <ColumnDefinition Width="100"/>
+                                                                            <ColumnDefinition Width="Auto"/>
+                                                                        </Grid.ColumnDefinitions>
+                                                                        <TextBox Text="{Binding CourseName}" FontSize="18" FontWeight="Bold" BorderThickness="0,0,0,1" BorderBrush="#E5E7EB" Background="Transparent" Width="200" HorizontalAlignment="Left"/>
+                                                                        <TextBox Grid.Column="1" Text="{Binding Credits}" ToolTip="Credits" Padding="5" Margin="10,0" BorderBrush="#E5E7EB" BorderThickness="1" VerticalAlignment="Center"/>
+                                                                        <Button Grid.Column="2" Content="✕" Command="{Binding DataContext.RemoveCalculatorCardCommand, RelativeSource={RelativeSource AncestorType=Window}}" CommandParameter="{Binding}" Style="{StaticResource DangerButtonStyle}"/>
+                                                                    </Grid>
+
+                                                                    <Grid Margin="0,0,0,5">
+                                                                        <Grid.ColumnDefinitions>
+                                                                            <ColumnDefinition Width="3*"/>
+                                                                            <ColumnDefinition Width="2*"/>
+                                                                            <ColumnDefinition Width="2*"/>
+                                                                            <ColumnDefinition Width="Auto"/>
+                                                                        </Grid.ColumnDefinitions>
+                                                                        <TextBlock Grid.Column="0" Text="Element" FontWeight="SemiBold" Foreground="#4B5563"/>
+                                                                        <TextBlock Grid.Column="1" Text="Grade" FontWeight="SemiBold" Foreground="#4B5563"/>
+                                                                        <TextBlock Grid.Column="2" Text="Weight (%)" FontWeight="SemiBold" Foreground="#4B5563"/>
+                                                                    </Grid>
+                                                                    <ItemsControl ItemsSource="{Binding GradeItems}">
+                                                                        <ItemsControl.ItemTemplate>
+                                                                            <DataTemplate>
+                                                                                <Grid Margin="0,5">
+                                                                                    <Grid.ColumnDefinitions>
+                                                                                        <ColumnDefinition Width="3*"/>
+                                                                                        <ColumnDefinition Width="2*"/>
+                                                                                        <ColumnDefinition Width="2*"/>
+                                                                                        <ColumnDefinition Width="30"/>
+                                                                                    </Grid.ColumnDefinitions>
+                                                                                    <TextBox Grid.Column="0" Text="{Binding Name}" Padding="5" Margin="0,0,10,0" Background="#F9FAFB" BorderBrush="#E5E7EB" BorderThickness="1"/>
+                                                                                    <TextBox Grid.Column="1" Text="{Binding GradeInput}" Padding="5" Margin="0,0,10,0" Background="#F9FAFB" BorderBrush="#E5E7EB" BorderThickness="1" ToolTip="Enter 80 or 50/70"/>
+                                                                                    <TextBox Grid.Column="2" Text="{Binding Weight}" Padding="5" Margin="0,0,10,0" Background="#F9FAFB" BorderBrush="#E5E7EB" BorderThickness="1"/>
+                                                                                    <Button Grid.Column="3" Content="-" Command="{Binding DataContext.RemoveRowCommand, RelativeSource={RelativeSource AncestorType=ItemsControl, AncestorLevel=2}}" CommandParameter="{Binding}" Style="{StaticResource DangerButtonStyle}"/>
+                                                                                </Grid>
+                                                                            </DataTemplate>
+                                                                        </ItemsControl.ItemTemplate>
+                                                                    </ItemsControl>
+                                                                    <Button Content="+ add more rows" Command="{Binding AddRowCommand}" HorizontalAlignment="Left" Background="Transparent" BorderThickness="0" Foreground="{StaticResource PrimaryPurple}" Margin="0,10,0,15" Cursor="Hand"/>
+                                                                    <Separator Background="#E5E7EB" Margin="0,0,0,15"/>
+                                                                    <Grid>
+                                                                        <Grid.ColumnDefinitions>
+                                                                            <ColumnDefinition Width="*"/>
+                                                                            <ColumnDefinition Width="Auto"/>
+                                                                        </Grid.ColumnDefinitions>
+                                                                        <StackPanel>
+                                                                            <TextBlock Text="{Binding FinalGradeText}" FontSize="18" FontWeight="Bold" Foreground="{StaticResource TextDark}"/>
+                                                                            <TextBlock Text="{Binding LetterGradeText}" FontSize="16" FontWeight="SemiBold" Foreground="{StaticResource TextGreen}"/>
+                                                                        </StackPanel>
+                                                                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                                                                            <Button Content="Calculate" Command="{Binding CalculateCommand}" Style="{StaticResource StandardButtonStyle}"/>
+                                                                            <Button Content="Add to Semester" Command="{Binding AddToSemesterCommand}" Style="{StaticResource SuccessButtonStyle}" Margin="10,0"/>
+                                                                            <Button Content="Clear" Command="{Binding ClearCommand}" Style="{StaticResource SecondaryButtonStyle}"/>
+                                                                        </StackPanel>
+                                                                    </Grid>
+                                                                </StackPanel>
+                                                            </Border>
+                                                        </DataTemplate>
+                                                    </ItemsControl.ItemTemplate>
+                                                </ItemsControl>
+                                            </ScrollViewer>
+                                            <Button Grid.Row="2" Content="Add Course" Command="{Binding AddCalculatorCardCommand}" Style="{StaticResource StandardButtonStyle}" HorizontalAlignment="Left" Margin="0,20,0,0"/>
+                                        </Grid>
+                                    </DataTemplate>
+                                </Setter.Value>
+                            </Setter>
+                        </DataTrigger>
+
+                    </Style.Triggers>
+                </Style>
+            </ContentControl.Style>
+        </ContentControl>
+    </Grid>
+</Window>
